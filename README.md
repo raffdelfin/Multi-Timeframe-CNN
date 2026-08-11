@@ -1,8 +1,6 @@
 # Multi-Timeframe-CNN
 This is a PRD derived from Zhang Wei's paper "Neural Network-Based Algorithmic Trading Systems: Multi-Timeframe Analysis and High-Frequency Execution in Cryptocurrency Markets." The main blocker to implement this methodology is sourcing the necessary historical orderbook data. Section 6 (not fully debugged) of the PRD outlines the scaffolding implementation using Steve Yegge's `beads` and Ralph mode.
 
-Share, like, and subscribe for more! 
-
 
 ---
 
@@ -20,7 +18,6 @@ Share, like, and subscribe for more!
 * **Inference Instantiation:** The Data Ingestion Pipeline acts as a shared singleton, feeding a unified database. However, the core neural network architecture serves as a blueprint. Completely independent Inference Engines and models will be instantiated for each target execution timeframe (e.g., one dedicated network for the 5-minute market, and a separate dedicated network for the 15-minute market) to eliminate negative transfer and allow for isolated hyperparameter optimization.
 * **Output:** The absolute source of truth is the PostgreSQL database. The inference engine must execute a strict, atomic database-first write sequence. Timestamped JSON files are generated and dropped into `/signals` (to be consumed by the Gengar bot in Phase 2) *only* upon catching a successful database commit, and the JSON payload must explicitly contain the newly generated PostgreSQL `row_id` to establish an unbroken forensic chain.
 * **Orchestration:** Ralph loop, supervised via Beads (`bd`) issue tracking.
-* **Experimentation Engine:** Customized `autoresearch` (https://github.com/karpathy/autoresearch) autonomous loop. The LLM agent will iteratively modify the model architecture and hyperparameters within a fixed training time budget, optimizing strictly for lowest Validation BCE Loss rather than the default `val_bpb`.
 
 ## 2. "Immutable Truth": Data & Mathematical Specifications
 *This section dictates the exact calculations and transformations. No module may deviate from these formulas.*
